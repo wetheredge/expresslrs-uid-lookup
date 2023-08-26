@@ -1,0 +1,4 @@
+/target
+/table.bin
+/lists/*
+!/lists/expresslrs
