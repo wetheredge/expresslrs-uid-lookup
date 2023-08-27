@@ -1,3 +1,4 @@
+use std::fs;
 use std::sync::{Arc, OnceLock};
 
 use axum::extract::{Path, State};
@@ -7,12 +8,27 @@ use axum::routing::get;
 use elrs_rainbow_table::Table;
 use serde_json::json;
 
-static RAW_TABLE: OnceLock<Vec<u8>> = OnceLock::new();
+#[derive(Debug, Clone)]
+enum RawData {
+    Words(Vec<u8>),
+    Table(Vec<u8>),
+}
+
+static RAW_DATA: OnceLock<RawData> = OnceLock::new();
 
 #[tokio::main]
 async fn main() {
-    let table = RAW_TABLE.get_or_init(|| elrs_rainbow_table::load_table().unwrap());
-    let table = Table::parse(table);
+    let data = RAW_DATA.get_or_init(|| {
+        if std::path::Path::new(elrs_rainbow_table::TABLE).exists() {
+            RawData::Table(fs::read(elrs_rainbow_table::TABLE).unwrap())
+        } else {
+            RawData::Words(elrs_rainbow_table::fetch_words().unwrap())
+        }
+    });
+    let table = match data {
+        RawData::Words(words) => Table::from_words(words).unwrap(),
+        RawData::Table(table) => Table::parse(table),
+    };
     println!("Loaded {} entries", table.len());
 
     let app = axum::Router::new()

@@ -1,4 +1,0 @@
-ExpressLRS
-expresslrs
-ELRS
-elrs

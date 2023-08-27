@@ -1,11 +1,18 @@
 use std::io::{self, BufRead, Write};
-use std::{env, process};
+use std::path::Path;
+use std::{env, fs, process};
 
 use elrs_rainbow_table::Table;
 
-fn main() -> io::Result<()> {
-    let raw_table = elrs_rainbow_table::load_table()?;
-    let table = Table::parse(&raw_table);
+fn main() -> anyhow::Result<()> {
+    let raw_data;
+    let table = if Path::new(elrs_rainbow_table::TABLE).exists() {
+        raw_data = fs::read(elrs_rainbow_table::TABLE)?;
+        Table::parse(&raw_data)
+    } else {
+        raw_data = elrs_rainbow_table::fetch_words()?;
+        Table::from_words(&raw_data)?
+    };
 
     println!("Loaded {} entries", table.len());
 

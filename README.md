@@ -12,24 +12,17 @@ with an NVME drive. Each lookup then takes less than 25 microseconds.
 
 ## Usage
 
-### Setup
-
-```shell
-# Download the word lists
-$ ./fetch.sh
-
-# Build the rainbow table (may take up to a few minutes)
-$ cargo run --release --bin generate
-```
+The first run will download the lists and build the rainbow table. Future runs
+will reuse the cached table.
 
 ### CLI
 
 ```shell
-$ cargo run --release --bin cli 65,245,33,230,58,226
+$ cargo run --release 65,245,33,230,58,226
 Loaded 14897972 entries
 Found binding phrase: 'expresslrs'
 
-$ cargo run --release --bin cli
+$ cargo run --release
 Loaded 14897972 entries
 Press ctrl-d to exit
 
