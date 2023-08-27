@@ -27,6 +27,10 @@ $ cargo run --release --bin generate
 ```shell
 $ cargo run --release --bin cli 65,245,33,230,58,226
 Loaded 14897972 entries
+Found binding phrase: 'expresslrs'
+
+$ cargo run --release --bin cli
+Loaded 14897972 entries
 Press ctrl-d to exit
 
 UID? 65,245,33,230,58,226
@@ -35,3 +39,17 @@ Found binding phrase: 'expresslrs'
 UID? 67,127,47,177,211,57
 Found binding phrase: 'ExpressLRS'
  ```
+
+### Server
+
+```shell
+$ cargo run --release --bin server
+Loaded 14897972 entries
+Running on 0.0.0.0:3000
+
+$ curl localhost:3000/65,245,33,230,58,226
+{
+    "bindingPhrase": "expresslrs",
+    "found": true
+}
+```
