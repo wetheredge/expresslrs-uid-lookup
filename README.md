@@ -35,12 +35,13 @@ Found binding phrase: 'ExpressLRS'
 
 ### Server
 
-```shell
-$ cargo run --release --bin server
-Loaded 14897972 entries
-Running on 0.0.0.0:3000
+The server is set up to be deployed on [shuttle.rs](https://shuttle.rs/). It can
+run locally with [`cargo-shuttle`](https://crates.io/crates/cargo-shuttle):
 
-$ curl localhost:3000/65,245,33,230,58,226
+```shell
+$ cd server && cargo shuttle run --release
+
+$ curl localhost:8000/65,245,33,230,58,226
 {
     "bindingPhrase": "expresslrs",
     "found": true

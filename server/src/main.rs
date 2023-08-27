@@ -1,4 +1,3 @@
-use std::fs;
 use std::sync::{Arc, OnceLock};
 
 use axum::extract::{Path, State};
@@ -15,33 +14,6 @@ enum RawData {
 }
 
 static RAW_DATA: OnceLock<RawData> = OnceLock::new();
-
-#[tokio::main]
-async fn main() {
-    let data = RAW_DATA.get_or_init(|| {
-        if std::path::Path::new(elrs_rainbow_table::TABLE).exists() {
-            RawData::Table(fs::read(elrs_rainbow_table::TABLE).unwrap())
-        } else {
-            RawData::Words(elrs_rainbow_table::fetch_words().unwrap())
-        }
-    });
-    let table = match data {
-        RawData::Words(words) => Table::from_words(words).unwrap(),
-        RawData::Table(table) => Table::parse(table),
-    };
-    println!("Loaded {} entries", table.len());
-
-    let app = axum::Router::new()
-        .route("/:uid", get(find))
-        .with_state(Arc::new(table));
-
-    println!("Running on 0.0.0.0:3000");
-
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
-}
 
 async fn find(State(table): State<Arc<Table<'_>>>, Path(uid): Path<String>) -> impl IntoResponse {
     let Some(uid) = elrs_rainbow_table::parse_uid(&uid) else {
@@ -65,4 +37,26 @@ async fn find(State(table): State<Arc<Table<'_>>>, Path(uid): Path<String>) -> i
     };
 
     (StatusCode::OK, response)
+}
+
+#[shuttle_runtime::main]
+async fn axum() -> shuttle_axum::ShuttleAxum {
+    let data = RAW_DATA.get_or_init(|| {
+        if std::path::Path::new(elrs_rainbow_table::TABLE).exists() {
+            RawData::Table(std::fs::read(elrs_rainbow_table::TABLE).unwrap())
+        } else {
+            RawData::Words(elrs_rainbow_table::fetch_words().unwrap())
+        }
+    });
+    let table = match data {
+        RawData::Words(words) => Table::from_words(words).unwrap(),
+        RawData::Table(table) => Table::parse(table),
+    };
+    println!("Loaded {} entries", table.len());
+
+    let router = axum::Router::new()
+        .route("/:uid", get(find))
+        .with_state(Arc::new(table));
+
+    Ok(router.into())
 }

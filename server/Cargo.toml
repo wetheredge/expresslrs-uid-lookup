@@ -1,0 +1,12 @@
+[package]
+name = "elrs-uid-server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = { version = "0.6.18", features = ["json"] }
+elrs-rainbow-table = { path = ".." }
+shuttle-axum = "0.24.0"
+shuttle-runtime = "0.24.0"
+serde_json = "1.0.105"
+tokio = "1.28.2"
