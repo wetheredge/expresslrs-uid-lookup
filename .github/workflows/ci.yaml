@@ -50,3 +50,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: crate-ci/typos@v1.20.9
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    needs: clippy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: rustup toolchain install stable --profile minimal
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-shuttle
+      - run: cargo shuttle login --api-key ${{ secrets.sHUTTLE_API }}
+      - run: cargo shuttle deploy
+        working-directory: server
