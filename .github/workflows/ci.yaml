@@ -42,7 +42,7 @@ jobs:
       - name: Install toolchain
         run: rustup toolchain install stable --profile minimal --component clippy
       - uses: Swatinem/rust-cache@v2
-      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo clippy --all-targets --all-features --workspace -- -D warnings
 
   typos:
     name: Typos
