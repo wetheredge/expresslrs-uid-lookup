@@ -81,6 +81,10 @@ impl<'a> Table<'a> {
         self.0.len()
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
     pub fn find(&self, uid: u64) -> Option<&[u8]> {
         self.0
             .binary_search_by_key(&uid, |&(uid, _)| uid)
