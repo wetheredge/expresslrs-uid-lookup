@@ -3,6 +3,9 @@ name = "elrs-uid-server"
 version = "0.1.0"
 edition = "2021"
 
+[package.metadata.cargo-machete]
+ignored = ["tokio"]
+
 [dependencies]
 axum = { version = "0.6.18", features = ["json"] }
 elrs-rainbow-table = { path = ".." }
