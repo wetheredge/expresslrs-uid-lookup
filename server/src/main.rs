@@ -2,10 +2,27 @@ use std::sync::Arc;
 
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
-use axum::response::{IntoResponse, Json};
+use axum::response::{Html, IntoResponse, Json};
 use axum::routing::get;
 use elrs_uid_lookup::Table;
 use serde_json::json;
+
+async fn index() -> impl IntoResponse {
+    Html(
+        r#"<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ExpressLRS UID Lookup</title>
+</head>
+<body>
+<h1>ExpressLRS UID Lookup</h1>
+<p>Attempts to find an <a href="https://expresslrs.org">ExpressLRS</a> binding phrase for a given uid.</p>
+<p>Example: <a href="https://elrs-uid.shuttleapp.rs/65,245,33,230,58,226">https://elrs-uid.shuttleapp.rs/65,245,33,230,58,226</a></p>
+<p>See <a href="https://github.com/wetheredge/expresslrs-uid-lookup#readme">the project README</a> for details.</p>
+</body>
+</html>"#,
+    )
+}
 
 async fn find(State(table): State<Arc<Table<'_>>>, Path(uid): Path<String>) -> impl IntoResponse {
     let Some(uid) = elrs_uid_lookup::parse_uid(&uid) else {
@@ -44,6 +61,7 @@ async fn main() -> shuttle_axum::ShuttleAxum {
 
     let router = axum::Router::new()
         .route("/:uid", get(find))
+        .route("/", get(index))
         .with_state(Arc::new(table));
 
     Ok(router.into())
