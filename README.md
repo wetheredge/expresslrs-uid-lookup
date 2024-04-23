@@ -47,3 +47,5 @@ $ curl localhost:8000/65,245,33,230,58,226
     "found": true
 }
 ```
+
+Or, try the deployed version: <https://elrs-uid.shuttleapp.rs/65,245,33,230,58,226>.
