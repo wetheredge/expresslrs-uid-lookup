@@ -4,6 +4,8 @@ updates:
   directory: /
   schedule:
     interval: monthly
+  allow:
+    - dependency-type: all
   groups:
     non-major:
       update-types:
