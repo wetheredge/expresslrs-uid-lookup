@@ -2,7 +2,7 @@
 members = ["./server"]
 
 [package]
-name = "elrs-rainbow-table"
+name = "elrs-uid-lookup"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"

@@ -2,15 +2,15 @@ use std::io::{self, BufRead, Write};
 use std::path::Path;
 use std::{env, fs, process};
 
-use elrs_rainbow_table::Table;
+use elrs_uid_lookup::Table;
 
 fn main() -> anyhow::Result<()> {
     let raw_data;
-    let table = if Path::new(elrs_rainbow_table::TABLE).exists() {
-        raw_data = fs::read(elrs_rainbow_table::TABLE)?;
+    let table = if Path::new(elrs_uid_lookup::TABLE).exists() {
+        raw_data = fs::read(elrs_uid_lookup::TABLE)?;
         Table::parse(&raw_data)
     } else {
-        raw_data = elrs_rainbow_table::fetch_words()?;
+        raw_data = elrs_uid_lookup::fetch_words()?;
         Table::from_words(&raw_data)?
     };
 
@@ -42,7 +42,7 @@ fn handle_uid(table: &Table, uid: &str) -> io::Result<bool> {
     #[cfg(feature = "time-lookup")]
     let start = std::time::Instant::now();
 
-    let Some(uid) = elrs_rainbow_table::parse_uid(uid.trim()) else {
+    let Some(uid) = elrs_uid_lookup::parse_uid(uid.trim()) else {
         println!("Invalid uid");
         return Ok(false);
     };

@@ -4,11 +4,11 @@ use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Json};
 use axum::routing::get;
-use elrs_rainbow_table::Table;
+use elrs_uid_lookup::Table;
 use serde_json::json;
 
 async fn find(State(table): State<Arc<Table<'_>>>, Path(uid): Path<String>) -> impl IntoResponse {
-    let Some(uid) = elrs_rainbow_table::parse_uid(&uid) else {
+    let Some(uid) = elrs_uid_lookup::parse_uid(&uid) else {
         return (
             StatusCode::BAD_REQUEST,
             Json(json!({ "error": "Malformed uid" })),
@@ -33,11 +33,11 @@ async fn find(State(table): State<Arc<Table<'_>>>, Path(uid): Path<String>) -> i
 
 #[shuttle_runtime::main]
 async fn main() -> shuttle_axum::ShuttleAxum {
-    let table = if std::path::Path::new(elrs_rainbow_table::TABLE).exists() {
-        let table = std::fs::read(elrs_rainbow_table::TABLE).unwrap();
+    let table = if std::path::Path::new(elrs_uid_lookup::TABLE).exists() {
+        let table = std::fs::read(elrs_uid_lookup::TABLE).unwrap();
         Table::parse(table.leak())
     } else {
-        let words = elrs_rainbow_table::fetch_words().unwrap();
+        let words = elrs_uid_lookup::fetch_words().unwrap();
         Table::from_words(words.leak()).unwrap()
     };
     println!("Loaded {} entries", table.len());

@@ -1,10 +1,10 @@
-# ExpressLRS Rainbow Table Generator
+# ExpressLRS UID Lookup
 
 This is a Rust port of https://github.com/MUSTARDTIGERFPV/ELRS-Rainbow-Tables
 focused on optimizing lookup speed. It attempts to find an ExpressLRS binding
 phrase that matches the given uid.
 
-This implementation uses a binary format for the rainbow table rather than CSV
+This implementation uses a binary format for the lookup table rather than CSV
 to save on disk space and improve loading time. The lookup code also loads the
 table into a preallocated byte array and swaps the hash map lookup for a binary
 search. With these changes, data loading takes ~300 milliseconds on an i7 laptop
@@ -12,7 +12,7 @@ with an NVME drive. Each lookup then takes less than 25 microseconds.
 
 ## Usage
 
-The first run will download the lists and build the rainbow table. Future runs
+The first run will download the lists and build the lookup table. Future runs
 will reuse the cached table.
 
 ### CLI

@@ -71,7 +71,7 @@ impl<'a> Table<'a> {
                 (uid, word)
             })
             .collect::<BTreeMap<_, _>>();
-        println!("Generated rainbow table with {} entries", table.len());
+        println!("Generated lookup table with {} entries", table.len());
 
         write_table(&table, TABLE)?;
         Ok(Table::from_map(&table))
