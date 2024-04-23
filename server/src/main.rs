@@ -1,4 +1,4 @@
-use std::sync::{Arc, OnceLock};
+use std::sync::Arc;
 
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
@@ -6,14 +6,6 @@ use axum::response::{IntoResponse, Json};
 use axum::routing::get;
 use elrs_rainbow_table::Table;
 use serde_json::json;
-
-#[derive(Debug, Clone)]
-enum RawData {
-    Words(Vec<u8>),
-    Table(Vec<u8>),
-}
-
-static RAW_DATA: OnceLock<RawData> = OnceLock::new();
 
 async fn find(State(table): State<Arc<Table<'_>>>, Path(uid): Path<String>) -> impl IntoResponse {
     let Some(uid) = elrs_rainbow_table::parse_uid(&uid) else {
@@ -31,26 +23,22 @@ async fn find(State(table): State<Arc<Table<'_>>>, Path(uid): Path<String>) -> i
             );
         };
 
-        Json(json!({ "found": true, "bindingPhrase": binding_phrase }))
+        json!({ "found": true, "bindingPhrase": binding_phrase })
     } else {
-        Json(json!({ "found": false }))
+        json!({ "found": false })
     };
 
-    (StatusCode::OK, response)
+    (StatusCode::OK, Json(response))
 }
 
 #[shuttle_runtime::main]
-async fn axum() -> shuttle_axum::ShuttleAxum {
-    let data = RAW_DATA.get_or_init(|| {
-        if std::path::Path::new(elrs_rainbow_table::TABLE).exists() {
-            RawData::Table(std::fs::read(elrs_rainbow_table::TABLE).unwrap())
-        } else {
-            RawData::Words(elrs_rainbow_table::fetch_words().unwrap())
-        }
-    });
-    let table = match data {
-        RawData::Words(words) => Table::from_words(words).unwrap(),
-        RawData::Table(table) => Table::parse(table),
+async fn main() -> shuttle_axum::ShuttleAxum {
+    let table = if std::path::Path::new(elrs_rainbow_table::TABLE).exists() {
+        let table = std::fs::read(elrs_rainbow_table::TABLE).unwrap();
+        Table::parse(table.leak())
+    } else {
+        let words = elrs_rainbow_table::fetch_words().unwrap();
+        Table::from_words(words.leak()).unwrap()
     };
     println!("Loaded {} entries", table.len());
 
