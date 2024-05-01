@@ -9,7 +9,7 @@ ignored = ["tokio"]
 [dependencies]
 axum = { version = "0.7.5", features = ["json"] }
 elrs-uid-lookup = { path = ".." }
-shuttle-axum = "0.43.0"
-shuttle-runtime = "0.43.0"
+shuttle-axum = "0.44.0"
+shuttle-runtime = "0.44.0"
 serde_json = "1.0.116"
 tokio = "1.37.0"

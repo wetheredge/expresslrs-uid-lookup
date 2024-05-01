@@ -19,7 +19,7 @@ anyhow = "1.0.82"
 md-5 = { version = "0.10.5", features = ["asm"] }
 memchr = "2.7.2"
 rayon = "1.10.0"
-ureq = "2.7.1"
+ureq = "2.9.7"
 
 [profile.release]
 lto = "thin"
