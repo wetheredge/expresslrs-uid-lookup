@@ -15,7 +15,7 @@ ignored = ["md-5"]
 time-lookup = []
 
 [dependencies]
-anyhow = "1.0.82"
+anyhow = "1.0.86"
 md-5 = { version = "0.10.5", features = ["asm"] }
 memchr = "2.7.2"
 rayon = "1.10.0"
