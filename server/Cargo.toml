@@ -7,9 +7,9 @@ edition = "2021"
 ignored = ["tokio"]
 
 [dependencies]
-axum = { version = "0.7.7", features = ["json"] }
+axum = { version = "0.7.9", features = ["json"] }
 elrs-uid-lookup = { path = ".." }
-shuttle-axum = "0.48.0"
-shuttle-runtime = "0.48.0"
-serde_json = "1.0.132"
-tokio = "1.41.0"
+shuttle-axum = "0.49.0"
+shuttle-runtime = "0.49.0"
+serde_json = "1.0.133"
+tokio = "1.41.1"
