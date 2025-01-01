@@ -15,11 +15,11 @@ ignored = ["md-5"]
 time-lookup = []
 
 [dependencies]
-anyhow = "1.0.93"
+anyhow = "1.0.95"
 md-5 = { version = "0.10.5", features = ["asm"] }
 memchr = "2.7.4"
 rayon = "1.10.0"
-ureq = "2.11.0"
+ureq = "2.12.1"
 
 [profile.release]
 lto = "thin"
