@@ -64,6 +64,6 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-shuttle
-      - run: cargo shuttle login --api-key ${{ secrets.sHUTTLE_API }}
-      - run: cargo shuttle deploy
+      - run: shuttle login --api-key ${{ secrets.SHUTTLE_API }}
+      - run: shuttle deploy
         working-directory: server
