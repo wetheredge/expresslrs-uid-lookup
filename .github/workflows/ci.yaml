@@ -65,5 +65,5 @@ jobs:
         with:
           tool: cargo-shuttle
       - run: shuttle login --api-key ${{ secrets.SHUTTLE_API }}
-      - run: shuttle deploy
+      - run: shuttle deploy --name elrs-uid
         working-directory: server
